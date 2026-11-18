@@ -1,0 +1,10 @@
+{
+  "name": "hello-ps1",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.ps1",
+  "permissions": [
+    "notify"
+  ],
+  "autostart": false
+}

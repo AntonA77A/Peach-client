@@ -1,0 +1,10 @@
+{
+  "name": "hello-py",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.py",
+  "permissions": [
+    "notify"
+  ],
+  "autostart": false
+}

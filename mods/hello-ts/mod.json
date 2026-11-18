@@ -1,0 +1,10 @@
+{
+  "name": "hello-ts",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.ts",
+  "permissions": [
+    "notify"
+  ],
+  "autostart": false
+}

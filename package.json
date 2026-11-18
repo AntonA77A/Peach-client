@@ -1,0 +1,13 @@
+{
+  "name": "peach-client",
+  "version": "0.1.0",
+  "description": "Windows mod client: write Windows mods in many languages",
+  "bin": { "peach": "bin/peach.js" },
+  "scripts": {
+    "start": "node bin/peach.js start",
+    "list": "node bin/peach.js list",
+    "test": "node test/smoke.js && node test/events.js && node test/hotkey-mods.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

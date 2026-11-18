@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peach Client</title>
+<style>
+  :root { --bg:#fff7f2; --card:#fff; --ink:#2b1d1a; --muted:#8a7570; --accent:#ff7a59; --line:#f0d9d0; --ok:#2e9e5b; --bad:#d64545; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1b1412; --card:#261c19; --ink:#f6e9e4; --muted:#a58f88; --line:#3a2b27; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--line); }
+  header h1 { font-size:20px; margin:0; } header span { color:var(--muted); font-size:13px; }
+  header button { margin-left:auto; }
+  main { max-width:960px; margin:0 auto; padding:16px 16px 48px; display:grid; gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .name { font-weight:600; } .desc { color:var(--muted); font-size:13px; flex-basis:100%; }
+  .tag { font-size:12px; padding:1px 8px; border-radius:99px; border:1px solid var(--line); color:var(--muted); }
+  .status { font-size:12px; font-weight:600; } .running { color:var(--ok); } .crashed { color:var(--bad); } .stopped,.stopping { color:var(--muted); }
+  button { font:inherit; padding:5px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .spacer { margin-left:auto; }
+  pre { margin:10px 0 0; padding:10px; max-height:200px; overflow:auto; background:var(--bg); border-radius:8px; font:12px/1.5 ui-monospace, Consolas, monospace; white-space:pre-wrap; word-break:break-word; }
+  .err { color:var(--bad); } .sys { color:var(--muted); }
+  details summary { cursor:pointer; color:var(--muted); font-size:13px; margin-top:8px; }
+  .langs { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; } .langs .tag.ok { color:var(--ok); border-color:var(--ok); }
+  .empty { color:var(--muted); text-align:center; padding:32px; }
+</style>
+</head>
+<body>
+<header><h1>🍑 Peach Client</h1><span id="ver"></span><button id="rescan">Mods neu einlesen</button></header>
+<main id="app"><div class="empty">Lade…</div></main>
+<script>
+const TOKEN = "__UI_TOKEN__";
+const H = { 'x-peach-ui': TOKEN };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const open = new Set();
+async function act(path) { await fetch(path, { method:'POST', headers:H }); load(); }
+async function load() {
+  let d;
+  try { d = await (await fetch('/ui/state', { headers:H })).json(); } catch { return; }
+  document.getElementById('ver').textContent = 'v' + d.version;
+  const mods = d.mods.map(m => `
+    <div class="card"><div class="row">
+      <span class="name">${esc(m.name)}</span><span class="tag">${esc(m.language)}</span><span class="tag">v${esc(m.version)}</span>
+      <span class="status ${m.status}">${m.status}${m.pid ? ' · pid ' + m.pid : ''}</span>
+      <span class="spacer"></span>
+      ${m.status === 'running'
+        ? `<button onclick="act('/ui/restart/${esc(m.id)}')">Neustart</button><button onclick="act('/ui/stop/${esc(m.id)}')">Stop</button>`
+        : `<button class="primary" onclick="act('/ui/start/${esc(m.id)}')">Start</button>`}
+      ${m.description ? `<div class="desc">${esc(m.description)}</div>` : ''}
+      <div class="desc">Rechte: ${m.permissions.length ? m.permissions.map(esc).join(', ') : 'keine'}${m.unknownPermissions.length ? ' · unbekannt: ' + m.unknownPermissions.map(esc).join(', ') : ''}</div>
+    </div>
+    <details data-id="${esc(m.id)}" ${open.has(m.id) ? 'open' : ''}><summary>Log (${m.log.length})</summary>
+      <pre>${m.log.map(l => `<span class="${l.s}">${new Date(l.t).toLocaleTimeString()} ${esc(l.m)}</span>`).join('\n')}</pre></details></div>`).join('');
+  const langs = `<div class="card"><b>Unterstützte Sprachen</b><div class="langs">${d.runners.map(r =>
+    `<span class="tag ${r.available ? 'ok' : ''}" title="${r.available ? 'Interpreter gefunden' : 'Interpreter fehlt'}">${esc(r.label)} ${esc(r.ext)}</span>`).join('')}</div></div>`;
+  document.getElementById('app').innerHTML = (mods || '<div class="empty">Keine Mods gefunden. Lege welche mit <code>peach new</code> an.</div>') + langs;
+  document.querySelectorAll('details[data-id]').forEach(el => el.addEventListener('toggle', () => el.open ? open.add(el.dataset.id) : open.delete(el.dataset.id)));
+}
+document.getElementById('rescan').onclick = () => act('/ui/rescan');
+load(); setInterval(load, 2000);
+</script>
+</body>
+</html>

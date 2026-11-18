@@ -1,0 +1,10 @@
+{
+  "name": "hello-js",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.js",
+  "permissions": [
+    "notify"
+  ],
+  "autostart": false
+}

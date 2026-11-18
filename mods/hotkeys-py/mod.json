@@ -1,0 +1,8 @@
+{
+  "name": "Clipboard GROSS (Python)",
+  "version": "0.1.0",
+  "description": "Ctrl+Alt+U wandelt den Text in der Zwischenablage in Großbuchstaben um.",
+  "entry": "main.py",
+  "permissions": ["hotkeys", "clipboard", "notify"],
+  "autostart": false
+}

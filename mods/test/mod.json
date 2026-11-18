@@ -1,0 +1,8 @@
+{
+  "name": "Test",
+  "version": "0.1.0",
+  "description": "5345435345",
+  "entry": "main.js",
+  "permissions": ["notify", "shell"],
+  "autostart": true
+}

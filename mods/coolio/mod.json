@@ -1,0 +1,8 @@
+{
+  "name": "coolio",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.vbs",
+  "permissions": ["notify", "shell"],
+  "autostart": true
+}

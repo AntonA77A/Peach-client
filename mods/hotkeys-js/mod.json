@@ -1,0 +1,8 @@
+{
+  "name": "Hotkeys (JS)",
+  "version": "0.1.0",
+  "description": "Ctrl+Alt+J zeigt eine Benachrichtigung; Fensterwechsel werden geloggt.",
+  "entry": "main.js",
+  "permissions": ["hotkeys", "notify", "windows"],
+  "autostart": false
+}

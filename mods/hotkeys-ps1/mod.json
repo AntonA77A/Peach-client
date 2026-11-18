@@ -1,0 +1,8 @@
+{
+  "name": "Hotkeys (PowerShell)",
+  "version": "0.1.0",
+  "description": "Ctrl+Alt+H zeigt eine Benachrichtigung; Zwischenablage-Änderungen werden geloggt.",
+  "entry": "main.ps1",
+  "permissions": ["hotkeys", "notify", "clipboard"],
+  "autostart": false
+}

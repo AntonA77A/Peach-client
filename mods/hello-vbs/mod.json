@@ -1,0 +1,10 @@
+{
+  "name": "hello-vbs",
+  "version": "0.1.0",
+  "description": "",
+  "entry": "main.vbs",
+  "permissions": [
+    "notify"
+  ],
+  "autostart": false
+}
